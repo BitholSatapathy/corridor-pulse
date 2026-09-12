@@ -1,16 +1,19 @@
 import React from 'react';
-import { Sparkles, CheckCircle, Info, Activity } from 'lucide-react';
+import { Sparkles, Info } from 'lucide-react';
 import {
   formatDaypartShort,
   formatDemandSourceName,
   formatMagnetName,
   getAnchorConcentrationCategory
 } from '../utils/formatters';
+import { computeCorridorPulseScore } from '../utils/scoring';
 
 export default function PulseInsight({ corridor }) {
   if (!corridor) return null;
 
-  const isPending = corridor.enrichment_status === 'PENDING';
+  const pulseData = computeCorridorPulseScore(corridor);
+  const { overallScore, status, isPartial, components } = pulseData || {};
+
   const behavior = corridor.behavior || {};
   const dayparts = behavior.daypart_occasion_density || {};
   const resilience = behavior.resilience || {};
@@ -67,10 +70,11 @@ export default function PulseInsight({ corridor }) {
 
   // Traceable Evidence Pill Tags
   const evidenceTags = [
+    { label: `Pulse Score: ${overallScore}/100 (${status})`, color: 'text-cyan font-bold' },
     { label: `Peak: ${formatDaypartShort(peakDaypartKey)} (${peakDaypartVal})`, color: 'text-cyan' },
-    topDemandSource ? { label: `Top Source: ${formatDemandSourceName(topDemandSource[0])}`, color: 'text-emerald' } : null,
-    topMagnet ? { label: `Magnet: ${formatMagnetName(topMagnet[0])}`, color: 'text-blue' } : null,
-    { label: `Resilience: ${shock}/100 (${shockDesc})`, color: 'text-purple' },
+    topDemandSource ? { label: `Lead Demand: ${formatDemandSourceName(topDemandSource[0])}`, color: 'text-emerald' } : null,
+    topMagnet ? { label: `Core Magnet: ${formatMagnetName(topMagnet[0])}`, color: 'text-blue' } : null,
+    { label: `Shock Resil: ${shock}/100`, color: 'text-purple' },
     anchorConc ? { label: `Anchor Conc: ${concCategory.label}`, color: 'text-amber' } : null
   ].filter(Boolean);
 
@@ -82,8 +86,8 @@ export default function PulseInsight({ corridor }) {
             <span className="pulse-dot" />
             <Sparkles className="icon-xs text-cyan" />
           </div>
-          <span className="pulse-insight-title">EVIDENCE-BASED CORRIDOR INSIGHT</span>
-          <span className="pulse-rules-badge">Deterministic &bull; Rules-Based Synthesis</span>
+          <span className="pulse-insight-title">SCORE DIAGNOSTIC NARRATIVE & INSIGHT</span>
+          <span className="pulse-rules-badge">Rules-Based Traceable Synthesis</span>
         </div>
         
         <div className="pulse-evidence-tags">
@@ -96,54 +100,54 @@ export default function PulseInsight({ corridor }) {
       </div>
 
       <div className="pulse-insight-body">
-        {/* Sentence 1: Peak Activity */}
+        {/* Sentence 1: Pulse Score & Diurnal Rhythm */}
         <p className="pulse-sentence">
           <span className="sentence-marker text-cyan">1.</span>
-          <strong>{formatDaypartShort(peakDaypartKey)}</strong> is the corridor's highest-intensity period (scoring <strong>{peakDaypartVal}/100</strong>), driven primarily by {peakDesc}.
+          With an overall Pulse score of <strong>{overallScore}/100</strong> ({status}), activity centers on the <strong>{formatDaypartShort(peakDaypartKey)}</strong> window (scoring <strong>{peakDaypartVal}/100</strong>) driven by {peakDesc}.
         </p>
 
-        {/* Sentence 2: Demand Profile */}
+        {/* Sentence 2: Demand Driver Pull */}
         {topDemandSource ? (
           <p className="pulse-sentence">
             <span className="sentence-marker text-emerald">2.</span>
-            Demand is led primarily by <strong>{formatDemandSourceName(topDemandSource[0]).toLowerCase()}</strong> (weight: <strong>{(topDemandSource[1] * 100).toFixed(0)}%</strong>)
+            Demand pulls primarily from <strong>{formatDemandSourceName(topDemandSource[0]).toLowerCase()}</strong> (weight: <strong>{(topDemandSource[1] * 100).toFixed(0)}%</strong>)
             {secondDemandSource && (
-              <>, reinforced by <strong>{formatDemandSourceName(secondDemandSource[0]).toLowerCase()}</strong> ({(secondDemandSource[1] * 100).toFixed(0)}%)</>
-            )}.
+              <>, complemented by <strong>{formatDemandSourceName(secondDemandSource[0]).toLowerCase()}</strong> ({(secondDemandSource[1] * 100).toFixed(0)}%)</>
+            )}, feeding steady footfall into the commercial fabric.
           </p>
         ) : (
           <p className="pulse-sentence">
             <span className="sentence-marker text-emerald">2.</span>
-            Behavioral demand signals are led by <strong>{topAudienceId.toLowerCase()}</strong> activity, while detailed place-inventory ingestion is currently pending.
+            Behavioral demand is led by <strong>{topAudienceId.toLowerCase()}</strong> routines, while detailed place/magnet cataloging remains pending.
           </p>
         )}
 
-        {/* Sentence 3: Magnets & Footfall Anchor */}
+        {/* Sentence 3: Magnets & Anchor Stability */}
         {topMagnet && (
           <p className="pulse-sentence">
             <span className="sentence-marker text-blue">3.</span>
-            Footfall is strongly drawn by <strong>{formatMagnetName(topMagnet[0]).toLowerCase()}</strong>
+            Commercial gravity is sustained by <strong>{formatMagnetName(topMagnet[0]).toLowerCase()}</strong>
             {secondMagnet && (
               <> and <strong>{formatMagnetName(secondMagnet[0]).toLowerCase()}</strong></>
-            )} magnets, providing continuous commercial gravity.
+            )} magnets, supporting diversified visitation patterns.
           </p>
         )}
 
-        {/* Sentence 4: Resilience & Anchor Structure */}
+        {/* Sentence 4: Resilience & Dependency */}
         <p className="pulse-sentence">
           <span className="sentence-marker text-purple">4.</span>
-          The corridor demonstrates <strong>{shockDesc} shock resilience ({shock}/100)</strong>
+          The ecosystem demonstrates <strong>{shockDesc} shock absorption ({shock}/100)</strong>
           {anchorConc ? (
-            <> alongside <strong>{concCategory.label.toLowerCase()} anchor concentration</strong>, with {(anchorConc.top_three_anchor_share * 100).toFixed(1)}% of anchor presence concentrated among the top 3 anchors.</>
+            <> with <strong>{concCategory.label.toLowerCase()} anchor concentration</strong> (top 3 anchors hold {(anchorConc.top_three_anchor_share * 100).toFixed(1)}% of anchor presence), informing its {status.toLowerCase()} operational profile.</>
           ) : (
-            <>; granular anchor concentration tracking will be available once macro inventory is linked.</>
+            <>; full anchor diversification will be integrated following sub-corridor catalog ingestion.</>
           )}
         </p>
       </div>
 
       <div className="pulse-insight-footer">
         <Info className="icon-xs text-muted" />
-        <span>Every observation is strictly derived from observed empirical indicators without unverified causal claims.</span>
+        <span>This narrative explains the factors driving the composite Pulse Score. It reflects empirical behavioral signals, not revenue or success forecasts.</span>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import {
 import Header from './components/Header';
 import CorridorSelector from './components/CorridorSelector';
 import CorridorSummary from './components/CorridorSummary';
+import PulseScorecard from './components/PulseScorecard';
 import MetricCards from './components/MetricCards';
 import PulseInsight from './components/PulseInsight';
 import ActivityChart from './components/ActivityChart';
@@ -52,11 +53,14 @@ export default function App() {
           onSelectParent={setSelectedCorridor}
         />
 
-        {/* Primary Metric Highlights */}
-        <MetricCards corridor={selectedCorridor} />
+        {/* FEATURE 3: THE CORRIDOR PULSE SCORECARD (Top Focal Point) */}
+        <PulseScorecard corridor={selectedCorridor} />
 
-        {/* Feature 5: Rules-Based Corridor Pulse Insight */}
+        {/* Narrative & Metric Highlights */}
         <PulseInsight corridor={selectedCorridor} />
+
+        {/* 5 Core Behavioral Diagnostic Metrics */}
+        <MetricCards corridor={selectedCorridor} />
 
         {/* Intelligence Layer: Diurnal Rhythm & Audience Segments */}
         <div className="dashboard-grid">
