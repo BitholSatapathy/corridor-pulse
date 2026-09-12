@@ -2,6 +2,11 @@
 
 > Behavioral intelligence for commercial corridors.
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-corridor--pulse-0284c7?style=for-the-badge&logo=githubpages&logoColor=white)](https://bitholsatapathy.github.io/corridor-pulse/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/BitholSatapathy/corridor-pulse)
+
+🔗 **Live Public Showcase**: [https://bitholsatapathy.github.io/corridor-pulse/](https://bitholsatapathy.github.io/corridor-pulse/)
+
 ---
 
 ## 1. Overview
