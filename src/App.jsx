@@ -86,22 +86,22 @@ export default function App() {
             {/* 5 Core Behavioral Diagnostic Metrics */}
             <MetricCards corridor={selectedCorridor} />
 
-            {/* Intelligence Layer: Diurnal Rhythm & Audience Segments */}
+            {/* Intelligence Layer: Diurnal Rhythm & Audience Affinities */}
             <div className="dashboard-grid">
               <ActivityChart corridor={selectedCorridor} />
               <AudienceSection corridor={selectedCorridor} />
             </div>
 
-            {/* Intelligence Layer: Demand Profile & Place Ecosystem */}
+            {/* Intelligence Layer: Demand Profile & Stress Resilience */}
             <div className="dashboard-grid">
               <DemandProfile corridor={selectedCorridor} />
-              <PlaceEcosystem corridor={selectedCorridor} />
+              <ResilienceProfile corridor={selectedCorridor} />
             </div>
 
-            {/* Intelligence Layer: Resilience Profile & Anchor Dependency */}
+            {/* Intelligence Layer: Anchor Dependency & Place Ecosystem */}
             <div className="dashboard-grid">
-              <ResilienceProfile corridor={selectedCorridor} />
               <AnchorDependency corridor={selectedCorridor} />
+              <PlaceEcosystem corridor={selectedCorridor} />
             </div>
           </>
         )}

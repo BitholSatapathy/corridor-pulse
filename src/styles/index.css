@@ -3179,3 +3179,106 @@ body {
   font-family: var(--font-mono);
   font-weight: 700;
 }
+
+/* =========================================================
+   FINAL DEMO POLISH STYLES
+   ========================================================= */
+
+/* Scorecard Disclaimer Strip */
+.scorecard-disclaimer-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px dashed rgba(100, 116, 139, 0.35);
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-top: 0.25rem;
+}
+
+/* 10-Second Executive Pulse Brief Grid */
+.pulse-brief-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+  margin: 0.35rem 0;
+}
+
+@media (max-width: 960px) {
+  .pulse-brief-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .pulse-brief-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.brief-card {
+  background: var(--bg-app);
+  border: 1px solid var(--border-card);
+  border-radius: 0.625rem;
+  padding: 0.85rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.brief-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.brief-card.card-peak { border-top: 3px solid var(--color-cyan); }
+.brief-card.card-audience { border-top: 3px solid var(--color-purple); }
+.brief-card.card-demand { border-top: 3px solid var(--color-emerald); }
+.brief-card.card-resilience { border-top: 3px solid var(--color-amber); }
+
+.brief-top {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.brief-lbl {
+  font-size: 0.625rem;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.brief-val {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brief-sub {
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Compare Button Polish */
+.compare-corridors-action-btn {
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
+}
+
+.compare-corridors-action-btn:hover {
+  transform: scale(1.02);
+}

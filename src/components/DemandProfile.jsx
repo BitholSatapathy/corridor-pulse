@@ -32,7 +32,7 @@ export default function DemandProfile({ corridor }) {
         <div className="pending-notice-card">
           <AlertCircle className="icon-md text-amber" />
           <div>
-            <h4 className="pending-title">Demand Metrics Pending for Sub-Corridor</h4>
+            <h4 className="pending-title">Demand Metrics: Enrichment Pending</h4>
             <p className="pending-desc">
               Granular demand source weights and magnet driver classifications for <strong>{corridor.name}</strong> are currently in progress. Please refer to behavioral dayparts and audience affinities in the sections above.
             </p>

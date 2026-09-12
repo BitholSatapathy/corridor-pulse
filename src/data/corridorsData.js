@@ -22,7 +22,7 @@ corridors.forEach(c => {
   corridorsById.set(c.corridor_id, c);
 });
 
-// Default to first enriched MACRO corridor
+// Default demo corridor: St. George–North Shore (Macro Enriched)
 export const defaultCorridor = corridors.find(
-  c => c.level === 'MACRO' && c.enrichment_status === 'AVAILABLE'
+  c => c.name.includes('St. George') && c.level === 'MACRO'
 ) || corridors[0];

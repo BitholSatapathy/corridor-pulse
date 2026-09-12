@@ -131,7 +131,7 @@ export default function MetricCards({ corridor }) {
         </div>
         {isPending || magnetDiversity == null ? (
           <div className="metric-pending-state">
-            <span className="metric-pending-text">Pending</span>
+            <span className="metric-pending-text">Enrichment pending</span>
             <p className="metric-desc">Sub-corridor anchor data pending</p>
           </div>
         ) : (

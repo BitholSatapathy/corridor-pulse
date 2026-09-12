@@ -46,7 +46,7 @@ export default function PulseScorecard({ corridor }) {
         <div className="scorecard-header-left">
           <div className="pulse-hero-pill">
             <span className="pulse-hero-dot" />
-            <span className="pulse-hero-tag">CORRIDOR DIAGNOSTIC</span>
+            <span className="pulse-hero-tag">Derived Diagnostic</span>
           </div>
           <h2 className="scorecard-question">
             What is the overall pulse of {corridor.name}?
@@ -106,7 +106,7 @@ export default function PulseScorecard({ corridor }) {
           <div className="methodology-disclaimer-callout">
             <Info className="icon-xs text-muted shrink-0" />
             <p>
-              <strong>Analytical Notice:</strong> This is a derived diagnostic based on supplied corridor behavioral and physical signals. It is <em>not</em> an official city ranking, nor a predictive forecast of tenant success, footfall volume, or gross revenue.
+              <strong>Analytical Notice:</strong> This is a derived diagnostic based on supplied corridor signals. It is not a prediction of revenue, success, or population.
             </p>
           </div>
         </div>
@@ -151,7 +151,7 @@ export default function PulseScorecard({ corridor }) {
               </span>
               {isPartial && (
                 <span className="badge-partial" title="Evaluated across available Activity and Resilience components">
-                  Partial
+                  Partial Diagnostic
                 </span>
               )}
             </div>
@@ -194,7 +194,7 @@ export default function PulseScorecard({ corridor }) {
                 <span className="component-weight">{weights.demand}</span>
               </div>
               {components.demand.isPending ? (
-                <span className="badge-pending-comp">Pending</span>
+                <span className="badge-pending-comp">Enrichment pending</span>
               ) : (
                 <span className="component-score-val text-emerald">
                   {components.demand.score}
@@ -252,7 +252,7 @@ export default function PulseScorecard({ corridor }) {
                 <span className="component-weight">{weights.diversification}</span>
               </div>
               {components.diversification.isPending ? (
-                <span className="badge-pending-comp">Pending</span>
+                <span className="badge-pending-comp">Enrichment pending</span>
               ) : (
                 <span className="component-score-val text-amber">
                   {components.diversification.score}
@@ -291,6 +291,14 @@ export default function PulseScorecard({ corridor }) {
             : 'Activity is localized with specialized demand pull, showing higher sensitivity to single-anchor reliance or seasonal shifts.'}
           {isPartial && ' (Score calculated from available diurnal activity and resilience components during sub-corridor ingestion).'}
         </p>
+      </div>
+
+      {/* Mandatory Official Disclaimer Strip */}
+      <div className="scorecard-disclaimer-strip">
+        <Info className="icon-xs text-muted shrink-0" />
+        <span>
+          This is a derived diagnostic based on supplied corridor signals. It is not a prediction of revenue, success, or population.
+        </span>
       </div>
     </div>
   );

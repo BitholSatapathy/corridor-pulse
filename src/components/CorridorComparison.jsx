@@ -178,7 +178,7 @@ export default function CorridorComparison({
             </div>
             <div className="hero-badge-row">
               <span className="badge-pulse-status">{pulseA.status}</span>
-              {pulseA.isPartial && <span className="badge-partial">Partial</span>}
+              {pulseA.isPartial && <span className="badge-partial">Partial Diagnostic</span>}
               {componentComparison.overall.winner === 'A' && (
                 <span className="winner-chip chip-a">+ {componentComparison.overall.diff} Lead</span>
               )}
@@ -209,7 +209,7 @@ export default function CorridorComparison({
             </div>
             <div className="hero-badge-row">
               <span className="badge-pulse-status">{pulseB.status}</span>
-              {pulseB.isPartial && <span className="badge-partial">Partial</span>}
+              {pulseB.isPartial && <span className="badge-partial">Partial Diagnostic</span>}
               {componentComparison.overall.winner === 'B' && (
                 <span className="winner-chip chip-b">+ {componentComparison.overall.diff} Lead</span>
               )}
@@ -238,7 +238,7 @@ export default function CorridorComparison({
               <div className="comp-bars-track-grid">
                 {/* Value A */}
                 <div className="bar-val-col text-cyan">
-                  {data.isPendingA ? <span className="badge-pending-comp">Pending</span> : data.scoreA}
+                  {data.isPendingA ? <span className="badge-pending-comp">Enrichment pending</span> : data.scoreA}
                 </div>
 
                 {/* Comparative Dual Bars */}
@@ -255,7 +255,7 @@ export default function CorridorComparison({
 
                 {/* Value B */}
                 <div className="bar-val-col text-purple">
-                  {data.isPendingB ? <span className="badge-pending-comp">Pending</span> : data.scoreB}
+                  {data.isPendingB ? <span className="badge-pending-comp">Enrichment pending</span> : data.scoreB}
                 </div>
               </div>
 
@@ -264,7 +264,7 @@ export default function CorridorComparison({
                 {data.winner === 'A' && <span className="winner-tag tag-a">A Leads +{data.diff}</span>}
                 {data.winner === 'B' && <span className="winner-tag tag-b">B Leads +{data.diff}</span>}
                 {data.winner === 'TIE' && <span className="winner-tag tag-tie">Equal</span>}
-                {data.diff == null && <span className="winner-tag tag-pending">Partial</span>}
+                {data.diff == null && <span className="winner-tag tag-pending">Partial Diagnostic</span>}
               </div>
             </div>
           ))}
@@ -387,7 +387,7 @@ export default function CorridorComparison({
             <div className="sub-column col-a">
               <span className="col-header-tag tag-a">{corridorA.name}</span>
               {!demandSourcesA ? (
-                <div className="pending-mini-box">Demand Pending for Sub-Corridor</div>
+                <div className="pending-mini-box">Demand Data: Enrichment pending</div>
               ) : (
                 <div className="demand-ranked-block">
                   <span className="sub-block-title">Demand Sources</span>
@@ -416,7 +416,7 @@ export default function CorridorComparison({
             <div className="sub-column col-b">
               <span className="col-header-tag tag-b">{corridorB.name}</span>
               {!demandSourcesB ? (
-                <div className="pending-mini-box">Demand Pending for Sub-Corridor</div>
+                <div className="pending-mini-box">Demand Data: Enrichment pending</div>
               ) : (
                 <div className="demand-ranked-block">
                   <span className="sub-block-title">Demand Sources</span>
@@ -503,7 +503,7 @@ export default function CorridorComparison({
             <div className="sub-column col-a">
               <span className="col-header-tag tag-a">{corridorA.name}</span>
               {anchorsComparison.isPendingA ? (
-                <div className="pending-mini-box">Anchor Data Pending for Sub-Corridor</div>
+                <div className="pending-mini-box">Anchor Data: Enrichment pending</div>
               ) : (
                 <div className="anchor-comp-block">
                   <div className="anchor-level-row">
@@ -531,7 +531,7 @@ export default function CorridorComparison({
             <div className="sub-column col-b">
               <span className="col-header-tag tag-b">{corridorB.name}</span>
               {anchorsComparison.isPendingB ? (
-                <div className="pending-mini-box">Anchor Data Pending for Sub-Corridor</div>
+                <div className="pending-mini-box">Anchor Data: Enrichment pending</div>
               ) : (
                 <div className="anchor-comp-block">
                   <div className="anchor-level-row">
@@ -573,7 +573,7 @@ export default function CorridorComparison({
           <div className="sub-column col-a">
             <span className="col-header-tag tag-a">{corridorA.name}</span>
             {!placesA ? (
-              <div className="pending-mini-box">Place Inventory Pending for Sub-Corridor</div>
+              <div className="pending-mini-box">Place Inventory: Enrichment pending</div>
             ) : (
               <div className="places-mini-list">
                 {placesA.map((p, i) => (
@@ -591,7 +591,7 @@ export default function CorridorComparison({
           <div className="sub-column col-b">
             <span className="col-header-tag tag-b">{corridorB.name}</span>
             {!placesB ? (
-              <div className="pending-mini-box">Place Inventory Pending for Sub-Corridor</div>
+              <div className="pending-mini-box">Place Inventory: Enrichment pending</div>
             ) : (
               <div className="places-mini-list">
                 {placesB.map((p, i) => (

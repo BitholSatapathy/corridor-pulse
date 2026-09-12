@@ -22,7 +22,7 @@ export default function AnchorDependency({ corridor }) {
         <div className="pending-notice-card">
           <AlertCircle className="icon-md text-amber" />
           <div>
-            <h4 className="pending-title">Anchor Metrics Pending for Sub-Corridor</h4>
+            <h4 className="pending-title">Anchor Metrics: Enrichment Pending</h4>
             <p className="pending-desc">
               Anchor identification and Herfindahl concentration calculations for <strong>{corridor.name}</strong> are pending catalog ingestion.
             </p>

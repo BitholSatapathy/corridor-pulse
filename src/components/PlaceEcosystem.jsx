@@ -37,7 +37,7 @@ export default function PlaceEcosystem({ corridor }) {
         <div className="pending-notice-card">
           <AlertCircle className="icon-md text-amber" />
           <div>
-            <h4 className="pending-title">Place Inventory Pending for Sub-Corridor</h4>
+            <h4 className="pending-title">Place Inventory: Enrichment Pending</h4>
             <p className="pending-desc">
               Physical place listings, categories, and density counts for <strong>{corridor.name}</strong> are pending catalog ingestion.
             </p>
