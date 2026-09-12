@@ -1,17 +1,25 @@
 import React from 'react';
 import { ExternalLink, Linkedin } from 'lucide-react';
+import krishPhoto from '../../assets/team/krish.jpg';
+import bitholPhoto from '../../assets/team/bithol.jpg';
 
 const TEAM_MEMBERS = [
   {
     name: 'Krish Mathur',
     regNo: '24BCE10068',
     role: 'Corridor Intelligence & Behavioral Analytics',
+    photo: krishPhoto,
+    photoAlt: 'Krish Mathur',
+    photoPosition: 'center 20%',
     linkedin: 'https://www.linkedin.com/in/krish-mathur09/'
   },
   {
     name: 'Bithol Satapathy',
     regNo: '24BAI10972',
     role: 'System Architecture & Data Engineering',
+    photo: bitholPhoto,
+    photoAlt: 'Bithol Satapathy',
+    photoPosition: 'center 15%',
     linkedin: 'https://www.linkedin.com/in/bithol-satapathy-3aaa99321/'
   }
 ];
@@ -29,11 +37,15 @@ export default function TeamSection() {
       <div className="team-cards-grid">
         {TEAM_MEMBERS.map(member => (
           <div key={member.name} className="team-member-card">
-            {/* Elegant Circular Photo Placeholder clearly marked */}
-            <div className="team-photo-placeholder" aria-label="Photo placeholder">
-              <span className="photo-placeholder-text">
-                PHOTO TO BE ADDED
-              </span>
+            {/* Member Photo */}
+            <div className="team-photo-container">
+              <img
+                src={member.photo}
+                alt={member.photoAlt}
+                className="team-member-img"
+                style={{ objectPosition: member.photoPosition }}
+                loading="lazy"
+              />
             </div>
 
             <div className="team-info-group">
@@ -49,8 +61,8 @@ export default function TeamSection() {
               className="btn-linkedin"
             >
               <Linkedin size={15} />
-              <span>LinkedIn Profile</span>
-              <ExternalLink size={12} style={{ opacity: 0.7 }} />
+              <span>LinkedIn</span>
+              <ExternalLink size={12} style={{ opacity: 0.8 }} />
             </a>
           </div>
         ))}
