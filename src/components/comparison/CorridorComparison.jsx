@@ -11,7 +11,12 @@ import {
   Info
 } from 'lucide-react';
 import { compareCorridors } from '../../utils/comparison';
-import { getBoroughBadgeColor, getConfidenceBadge, formatDaypartShort, formatDaypartTime } from '../../utils/formatters';
+import {
+  getBoroughBadgeColor,
+  getConfidenceBadge,
+  formatDaypartShort,
+  formatDaypartTime
+} from '../../utils/formatters';
 
 export default function CorridorComparison({
   corridorA,
@@ -41,6 +46,13 @@ export default function CorridorComparison({
     anchorsComparison,
     keyDifferences
   } = comparison;
+
+  const componentRows = [
+    { key: 'activity', name: 'Activity Density', weight: '30%', data: componentComparison.activity },
+    { key: 'demand', name: 'Demand Pull', weight: '25%', data: componentComparison.demand },
+    { key: 'resilience', name: 'Stress Resilience', weight: '25%', data: componentComparison.resilience },
+    { key: 'diversification', name: 'Anchor Diversification', weight: '20%', data: componentComparison.diversification }
+  ];
 
   return (
     <div className="comparison-workspace">
@@ -90,7 +102,7 @@ export default function CorridorComparison({
           >
             {allCorridors.map(c => (
               <option key={c.corridor_id} value={c.corridor_id} style={{ background: '#0e1420', color: '#f1f5f9' }}>
-                {c.name} ({c.borough})
+                {c.name} ({c.borough}) {c.level === 'SUB_CORRIDOR' ? '[Sub]' : ''}
               </option>
             ))}
           </select>
@@ -116,7 +128,7 @@ export default function CorridorComparison({
           >
             {allCorridors.map(c => (
               <option key={c.corridor_id} value={c.corridor_id} style={{ background: '#0e1420', color: '#f1f5f9' }}>
-                {c.name} ({c.borough})
+                {c.name} ({c.borough}) {c.level === 'SUB_CORRIDOR' ? '[Sub]' : ''}
               </option>
             ))}
           </select>
@@ -137,7 +149,7 @@ export default function CorridorComparison({
         </div>
       )}
 
-      {/* Pulse Score Comparison */}
+      {/* 1. Pulse Score Comparison */}
       <div className="editorial-card">
         <div className="card-header">
           <div className="card-title-group">
@@ -157,6 +169,7 @@ export default function CorridorComparison({
                 {pulseA.overallScore}
               </span>
               <span className="badge badge-status-active">{pulseA.status}</span>
+              {pulseA.isPartial && <span className="badge badge-status-pending">Partial</span>}
             </div>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{pulseA.statusDescription}</p>
           </div>
@@ -171,37 +184,44 @@ export default function CorridorComparison({
                 {pulseB.overallScore}
               </span>
               <span className="badge badge-status-stable">{pulseB.status}</span>
+              {pulseB.isPartial && <span className="badge badge-status-pending">Partial</span>}
             </div>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{pulseB.statusDescription}</p>
           </div>
         </div>
 
         {/* 4 Components Comparative Rows */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
-          {componentComparison.map(c => {
-            const valA = c.scoreA ?? 'Pending';
-            const valB = c.scoreB ?? 'Pending';
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.75rem' }}>
+          {componentRows.map(({ key, name, weight, data }) => {
+            const valA = data?.isPendingA ? 'Pending' : (data?.scoreA ?? '--');
+            const valB = data?.isPendingB ? 'Pending' : (data?.scoreB ?? '--');
+            const diffText = data?.diff != null ? `Δ ${data.diff} pts` : '--';
+
             return (
-              <div key={c.key} style={{
+              <div key={key} style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr auto 1fr',
                 alignItems: 'center',
                 gap: '1rem',
                 padding: '0.65rem 0.875rem',
                 background: 'var(--bg-surface-elevated)',
-                borderRadius: 'var(--radius-md)'
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-subtle)'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: '0.8125rem', fontWeight: 500 }}>{c.name}</span>
+                  <span style={{ fontSize: '0.8125rem', fontWeight: 500 }}>{name}</span>
                   <span className="tabular-nums" style={{ fontWeight: 600, color: 'var(--accent-cyan)' }}>{valA}</span>
                 </div>
-                <span style={{ fontSize: '0.6875rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-                  {c.weight}
-                </span>
+                <div style={{ textAlign: 'center' }}>
+                  <span style={{ fontSize: '0.6875rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+                    {weight}
+                  </span>
+                  <div style={{ fontSize: '0.625rem', color: 'var(--text-muted)' }}>{diffText}</div>
+                </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span className="tabular-nums" style={{ fontWeight: 600, color: 'var(--accent-purple)' }}>{valB}</span>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    {c.delta != null ? `${c.delta > 0 ? '+' : ''}${c.delta}` : '--'}
+                    {data?.winner === 'B' ? 'B leads' : data?.winner === 'A' ? 'A leads' : 'Tied'}
                   </span>
                 </div>
               </div>
@@ -210,57 +230,112 @@ export default function CorridorComparison({
         </div>
       </div>
 
-      {/* Side-by-Side Signals Grid */}
-      <div className="comparison-columns-grid">
-        {/* Corridor A Top Audiences & Demands */}
-        <div className="comp-column">
-          <span className="card-label" style={{ color: 'var(--accent-cyan)' }}>
-            {corridorA.name} Signals
-          </span>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Top Audiences</span>
-            {audiencesA.slice(0, 3).map(aud => (
-              <div key={aud.segmentId} className="audience-row" style={{ padding: '0.4rem 0.6rem' }}>
-                <span style={{ fontSize: '0.75rem' }}>{aud.label}</span>
-                <span className="tabular-nums" style={{ fontSize: '0.75rem', fontWeight: 600 }}>{aud.score}/10</span>
-              </div>
-            ))}
+      {/* 2. Diurnal Dayparts Comparison */}
+      {daypartsComparison && (
+        <div className="editorial-card">
+          <div className="card-header">
+            <div className="card-title-group">
+              <span className="card-label">Diurnal Rhythms</span>
+              <h3 className="card-title">Daypart Occasion Density Comparison</h3>
+            </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Top Demand Sources</span>
-            {demandSourcesA.slice(0, 3).map(src => (
-              <div key={src.key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>{src.name}</span>
-                <span className="tabular-nums" style={{ fontWeight: 600 }}>{(src.value * 100).toFixed(0)}%</span>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.75rem' }}>
+            {daypartsComparison.map(dp => (
+              <div key={dp.key} style={{
+                padding: '0.75rem',
+                background: 'var(--bg-surface-subtle)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-subtle)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.35rem',
+                textAlign: 'center'
+              }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)' }}>{dp.label}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'baseline', marginTop: '0.25rem' }}>
+                  <span className="tabular-nums" style={{ color: 'var(--accent-cyan)', fontWeight: 600, fontSize: '0.9375rem' }}>
+                    {dp.valA}
+                  </span>
+                  <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>vs</span>
+                  <span className="tabular-nums" style={{ color: 'var(--accent-purple)', fontWeight: 600, fontSize: '0.9375rem' }}>
+                    {dp.valB}
+                  </span>
+                </div>
+                <span style={{ fontSize: '0.625rem', color: 'var(--text-muted)' }}>
+                  Δ {dp.diff} pts {dp.winner !== 'TIE' ? `(${dp.winner})` : ''}
+                </span>
               </div>
             ))}
           </div>
         </div>
+      )}
 
-        {/* Corridor B Top Audiences & Demands */}
+      {/* 3. Side-by-Side Signals Grid (Audiences & Demands) */}
+      <div className="comparison-columns-grid">
+        {/* Corridor A Signals */}
         <div className="comp-column">
-          <span className="card-label" style={{ color: 'var(--accent-purple)' }}>
-            {corridorB.name} Signals
+          <span className="card-label" style={{ color: 'var(--accent-cyan)' }}>
+            {corridorA.name} Signals
           </span>
+
+          {/* Top Audiences */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Top Audiences</span>
-            {audiencesB.slice(0, 3).map(aud => (
-              <div key={aud.segmentId} className="audience-row" style={{ padding: '0.4rem 0.6rem' }}>
+            {(audiencesA || []).slice(0, 3).map(aud => (
+              <div key={aud.id || aud.segmentId} className="audience-row" style={{ padding: '0.4rem 0.6rem' }}>
                 <span style={{ fontSize: '0.75rem' }}>{aud.label}</span>
                 <span className="tabular-nums" style={{ fontSize: '0.75rem', fontWeight: 600 }}>{aud.score}/10</span>
               </div>
             ))}
           </div>
 
+          {/* Top Demand Sources */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Top Demand Sources</span>
-            {demandSourcesB.slice(0, 3).map(src => (
-              <div key={src.key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>{src.name}</span>
-                <span className="tabular-nums" style={{ fontWeight: 600 }}>{(src.value * 100).toFixed(0)}%</span>
+            {demandSourcesA && demandSourcesA.length > 0 ? (
+              demandSourcesA.slice(0, 3).map(src => (
+                <div key={src.key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>{src.label || src.name}</span>
+                  <span className="tabular-nums" style={{ fontWeight: 600 }}>{(src.value * 100).toFixed(0)}%</span>
+                </div>
+              ))
+            ) : (
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Demand profile pending enrichment</span>
+            )}
+          </div>
+        </div>
+
+        {/* Corridor B Signals */}
+        <div className="comp-column">
+          <span className="card-label" style={{ color: 'var(--accent-purple)' }}>
+            {corridorB.name} Signals
+          </span>
+
+          {/* Top Audiences */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Top Audiences</span>
+            {(audiencesB || []).slice(0, 3).map(aud => (
+              <div key={aud.id || aud.segmentId} className="audience-row" style={{ padding: '0.4rem 0.6rem' }}>
+                <span style={{ fontSize: '0.75rem' }}>{aud.label}</span>
+                <span className="tabular-nums" style={{ fontSize: '0.75rem', fontWeight: 600 }}>{aud.score}/10</span>
               </div>
             ))}
+          </div>
+
+          {/* Top Demand Sources */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Top Demand Sources</span>
+            {demandSourcesB && demandSourcesB.length > 0 ? (
+              demandSourcesB.slice(0, 3).map(src => (
+                <div key={src.key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>{src.label || src.name}</span>
+                  <span className="tabular-nums" style={{ fontWeight: 600 }}>{(src.value * 100).toFixed(0)}%</span>
+                </div>
+              ))
+            ) : (
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Demand profile pending enrichment</span>
+            )}
           </div>
         </div>
       </div>
