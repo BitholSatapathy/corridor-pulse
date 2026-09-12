@@ -16,9 +16,15 @@ import DemandProfile from './components/DemandProfile';
 import PlaceEcosystem from './components/PlaceEcosystem';
 import ResilienceProfile from './components/ResilienceProfile';
 import AnchorDependency from './components/AnchorDependency';
+import CorridorComparison from './components/CorridorComparison';
 
 export default function App() {
   const [selectedCorridor, setSelectedCorridor] = useState(defaultCorridor);
+  const [isComparing, setIsComparing] = useState(false);
+
+  // Default Corridor B to a contrasting prominent corridor (e.g. Chelsea–Meatpacking or Fordham)
+  const defaultCompareCorridor = corridors.find(c => c.corridor_id !== defaultCorridor.corridor_id && c.level === 'MACRO') || corridors[1];
+  const [compareCorridor, setCompareCorridor] = useState(defaultCompareCorridor);
 
   const macroCount = corridors.filter(c => c.level === 'MACRO').length;
   const subCount = corridors.filter(c => c.level === 'SUB_CORRIDOR').length;
@@ -27,6 +33,10 @@ export default function App() {
   const parentCorridor = selectedCorridor?.parent_corridor_id
     ? corridorsById.get(selectedCorridor.parent_corridor_id)
     : null;
+
+  const handleToggleCompare = () => {
+    setIsComparing(prev => !prev);
+  };
 
   return (
     <div className="app-container">
@@ -39,46 +49,62 @@ export default function App() {
 
       {/* Main Dashboard Workspace */}
       <main className="main-content">
-        {/* Corridor Selection Control */}
+        {/* Main Corridor Selection Control with Compare Toggle */}
         <CorridorSelector
           corridors={corridors}
           selectedCorridor={selectedCorridor}
           onSelectCorridor={setSelectedCorridor}
+          onToggleCompare={handleToggleCompare}
+          isComparing={isComparing}
         />
 
-        {/* Corridor Summary & Identity */}
-        <CorridorSummary
-          corridor={selectedCorridor}
-          parentCorridor={parentCorridor}
-          onSelectParent={setSelectedCorridor}
-        />
+        {/* CONDITIONAL RENDERING: COMPARISON MODE VS SINGLE-CORRIDOR EXPERIENCE */}
+        {isComparing ? (
+          <CorridorComparison
+            corridorA={selectedCorridor}
+            corridorB={compareCorridor}
+            onSelectCorridorA={setSelectedCorridor}
+            onSelectCorridorB={setCompareCorridor}
+            onExitComparison={() => setIsComparing(false)}
+            allCorridors={corridors}
+          />
+        ) : (
+          <>
+            {/* Corridor Summary & Identity */}
+            <CorridorSummary
+              corridor={selectedCorridor}
+              parentCorridor={parentCorridor}
+              onSelectParent={setSelectedCorridor}
+            />
 
-        {/* FEATURE 3: THE CORRIDOR PULSE SCORECARD (Top Focal Point) */}
-        <PulseScorecard corridor={selectedCorridor} />
+            {/* FEATURE 3: THE CORRIDOR PULSE SCORECARD (Top Focal Point) */}
+            <PulseScorecard corridor={selectedCorridor} />
 
-        {/* Narrative & Metric Highlights */}
-        <PulseInsight corridor={selectedCorridor} />
+            {/* Narrative & Metric Highlights */}
+            <PulseInsight corridor={selectedCorridor} />
 
-        {/* 5 Core Behavioral Diagnostic Metrics */}
-        <MetricCards corridor={selectedCorridor} />
+            {/* 5 Core Behavioral Diagnostic Metrics */}
+            <MetricCards corridor={selectedCorridor} />
 
-        {/* Intelligence Layer: Diurnal Rhythm & Audience Segments */}
-        <div className="dashboard-grid">
-          <ActivityChart corridor={selectedCorridor} />
-          <AudienceSection corridor={selectedCorridor} />
-        </div>
+            {/* Intelligence Layer: Diurnal Rhythm & Audience Segments */}
+            <div className="dashboard-grid">
+              <ActivityChart corridor={selectedCorridor} />
+              <AudienceSection corridor={selectedCorridor} />
+            </div>
 
-        {/* Intelligence Layer: Demand Profile & Place Ecosystem */}
-        <div className="dashboard-grid">
-          <DemandProfile corridor={selectedCorridor} />
-          <PlaceEcosystem corridor={selectedCorridor} />
-        </div>
+            {/* Intelligence Layer: Demand Profile & Place Ecosystem */}
+            <div className="dashboard-grid">
+              <DemandProfile corridor={selectedCorridor} />
+              <PlaceEcosystem corridor={selectedCorridor} />
+            </div>
 
-        {/* Intelligence Layer: Resilience Profile & Anchor Dependency */}
-        <div className="dashboard-grid">
-          <ResilienceProfile corridor={selectedCorridor} />
-          <AnchorDependency corridor={selectedCorridor} />
-        </div>
+            {/* Intelligence Layer: Resilience Profile & Anchor Dependency */}
+            <div className="dashboard-grid">
+              <ResilienceProfile corridor={selectedCorridor} />
+              <AnchorDependency corridor={selectedCorridor} />
+            </div>
+          </>
+        )}
       </main>
 
       {/* Footer */}

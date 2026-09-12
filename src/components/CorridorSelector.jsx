@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ChevronDown, MapPin, Check, AlertCircle } from 'lucide-react';
+import { Search, ChevronDown, MapPin, Check, AlertCircle, GitCompare } from 'lucide-react';
 import { getBoroughBadgeColor } from '../utils/formatters';
 
 const BOROUGHS = ['ALL', 'Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island'];
@@ -7,7 +7,9 @@ const BOROUGHS = ['ALL', 'Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Isl
 export default function CorridorSelector({
   corridors,
   selectedCorridor,
-  onSelectCorridor
+  onSelectCorridor,
+  onToggleCompare,
+  isComparing
 }) {
   const [search, setSearch] = useState('');
   const [selectedBorough, setSelectedBorough] = useState('ALL');
@@ -69,21 +71,37 @@ export default function CorridorSelector({
           </button>
         </div>
 
-        {/* Borough Filter Quick Chips */}
-        <div className="borough-chips">
-          {BOROUGHS.map(b => (
+        {/* Action Controls: Borough Filters & Compare Corridors Action */}
+        <div className="selector-actions-group">
+          {/* Borough Filter Quick Chips */}
+          <div className="borough-chips">
+            {BOROUGHS.map(b => (
+              <button
+                key={b}
+                type="button"
+                className={`borough-chip ${selectedBorough === b ? 'active' : ''}`}
+                onClick={() => {
+                  setSelectedBorough(b);
+                  setIsOpen(true);
+                }}
+              >
+                {b}
+              </button>
+            ))}
+          </div>
+
+          {/* Compare Action Button */}
+          {onToggleCompare && (
             <button
-              key={b}
               type="button"
-              className={`borough-chip ${selectedBorough === b ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedBorough(b);
-                setIsOpen(true);
-              }}
+              className={`compare-corridors-action-btn ${isComparing ? 'active' : ''}`}
+              onClick={onToggleCompare}
+              title={isComparing ? 'Close comparison mode' : 'Compare two corridors side by side'}
             >
-              {b}
+              <GitCompare className="icon-xs text-cyan" />
+              <span>{isComparing ? 'Exit Comparison' : 'Compare Corridors'}</span>
             </button>
-          ))}
+          )}
         </div>
       </div>
 
