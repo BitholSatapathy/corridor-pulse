@@ -72,3 +72,93 @@ export function getFamilyColor(familyId) {
   };
   return map[familyId?.toLowerCase()] || 'text-slate-400 bg-slate-500/10 border-slate-500/20';
 }
+
+export function formatDemandSourceName(key) {
+  const map = {
+    residential: 'Residential Demand',
+    workplace: 'Workplace & Office Flow',
+    commuter: 'Commuter Corridor Flow',
+    hotel_guest_context: 'Hotel & Hospitality Visitor',
+    university_context: 'University & Student Population',
+    tourist_destination_context: 'Tourism & Destination Visitors',
+    medical_context: 'Medical Campus & Healthcare Context'
+  };
+  return map[key] || key.replace(/_/g, ' ');
+}
+
+export function formatMagnetName(key) {
+  const map = {
+    transit: 'Transit Hubs',
+    office: 'Commercial Office Space',
+    retail: 'Neighborhood Retail',
+    restaurant_district: 'Dining & Restaurants',
+    retail_destination: 'Destination Retail',
+    entertainment: 'Entertainment & Arts',
+    nightlife: 'Bars & Nightlife',
+    park_waterfront: 'Parks & Waterfront',
+    tourist_attraction: 'Tourist Attractions',
+    education: 'Schools & Education',
+    medical: 'Medical Campuses',
+    stadium_event: 'Arenas & Stadiums',
+    grocery_routine: 'Groceries & Daily Essentials',
+    civic_community: 'Civic & Community Centers',
+    hospitality: 'Hotels & Accommodations'
+  };
+  return map[key] || key.replace(/_/g, ' ');
+}
+
+export function formatPlaceClassName(cls) {
+  const map = {
+    CAFE: 'Cafes & Coffee',
+    RESTAURANT: 'Restaurants & Dining',
+    GROCERY_SUPERMARKET: 'Groceries & Supermarkets',
+    RETAIL: 'Retail Stores',
+    PARK: 'Parks & Public Spaces',
+    K12_SCHOOL: 'K-12 Schools',
+    HOSPITAL_MEDICAL_CAMPUS: 'Medical & Hospital Campuses',
+    NIGHTLIFE: 'Nightlife & Bars',
+    EVENT_VENUE: 'Event & Performing Venues',
+    TRANSIT_HUB: 'Transit Hubs',
+    UNIVERSITY_CAMPUS: 'Universities & Colleges',
+    HOTEL: 'Hotels & Hospitality',
+    MALL_MARKET_HALL: 'Malls & Market Halls',
+    GOVERNMENT_CIVIC: 'Civic & Government',
+    HISTORICAL_LANDMARK: 'Historical Landmarks',
+    RELIGIOUS_COMMUNITY: 'Religious & Community',
+    THEATER_CINEMA: 'Theaters & Cinemas',
+    STADIUM_ARENA: 'Stadiums & Arenas'
+  };
+  return map[cls] || cls.replace(/_/g, ' ');
+}
+
+/**
+ * Anchor Concentration Category
+ * Internal rule documented:
+ * - top_three_anchor_share >= 50% or effective_anchor_count < 6.5 -> HIGH
+ * - top_three_anchor_share >= 42% or effective_anchor_count < 7.5 -> MODERATE
+ * - top_three_anchor_share < 42% -> LOW
+ * (Non-causal descriptive grouping based on empirical NYC corridor distribution)
+ */
+export function getAnchorConcentrationCategory(topThreeShare, effectiveCount) {
+  if (topThreeShare == null) return { label: 'PENDING', class: 'badge-conc-pending', desc: 'Data pending' };
+  
+  if (topThreeShare >= 0.50 || (effectiveCount != null && effectiveCount < 6.5)) {
+    return {
+      label: 'HIGH',
+      class: 'badge-conc-high',
+      desc: 'Significant footfall reliance concentrated in top 1–3 anchors'
+    };
+  }
+  if (topThreeShare >= 0.42 || (effectiveCount != null && effectiveCount < 7.5)) {
+    return {
+      label: 'MODERATE',
+      class: 'badge-conc-mod',
+      desc: 'Balanced distribution across key anchors with moderate core concentration'
+    };
+  }
+  return {
+    label: 'LOW',
+    class: 'badge-conc-low',
+    desc: 'Broadly dispersed anchor base with diverse independent traffic drivers'
+  };
+}

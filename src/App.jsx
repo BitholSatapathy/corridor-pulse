@@ -8,8 +8,13 @@ import Header from './components/Header';
 import CorridorSelector from './components/CorridorSelector';
 import CorridorSummary from './components/CorridorSummary';
 import MetricCards from './components/MetricCards';
+import PulseInsight from './components/PulseInsight';
 import ActivityChart from './components/ActivityChart';
 import AudienceSection from './components/AudienceSection';
+import DemandProfile from './components/DemandProfile';
+import PlaceEcosystem from './components/PlaceEcosystem';
+import ResilienceProfile from './components/ResilienceProfile';
+import AnchorDependency from './components/AnchorDependency';
 
 export default function App() {
   const [selectedCorridor, setSelectedCorridor] = useState(defaultCorridor);
@@ -50,10 +55,25 @@ export default function App() {
         {/* Primary Metric Highlights */}
         <MetricCards corridor={selectedCorridor} />
 
-        {/* Dual Core Sections: When Active & Who is Associated */}
+        {/* Feature 5: Rules-Based Corridor Pulse Insight */}
+        <PulseInsight corridor={selectedCorridor} />
+
+        {/* Intelligence Layer: Diurnal Rhythm & Audience Segments */}
         <div className="dashboard-grid">
           <ActivityChart corridor={selectedCorridor} />
           <AudienceSection corridor={selectedCorridor} />
+        </div>
+
+        {/* Intelligence Layer: Demand Profile & Place Ecosystem */}
+        <div className="dashboard-grid">
+          <DemandProfile corridor={selectedCorridor} />
+          <PlaceEcosystem corridor={selectedCorridor} />
+        </div>
+
+        {/* Intelligence Layer: Resilience Profile & Anchor Dependency */}
+        <div className="dashboard-grid">
+          <ResilienceProfile corridor={selectedCorridor} />
+          <AnchorDependency corridor={selectedCorridor} />
         </div>
       </main>
 
